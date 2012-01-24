@@ -1,1 +1,4 @@
-Depends on: Erica Utilities, wget
+Depends on Erica Utilities and wget
+
+Licensing:
+This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. Please visit http://creativecommons.org/licenses/by-nc-sa/3.0/ for more information.
