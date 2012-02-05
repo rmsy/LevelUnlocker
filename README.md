@@ -1,12 +1,15 @@
 LevelUnlocker
 ===========
 
-Dependencies
------------
-The following are required dependencies for LevelUnlocker, and it will not function without them:
-* Erica Utilities
-* wget
+LevelUnlocker is a bash script for jailbroken iOS devices that unlocks levels in popular iOS devices prior to reaching them legitimately.
 
-Usage
+Supported Applications
 -----------
-Place LevelUnlocker.sh in /usr/bin/ with the permissions `0755`, and run.
+* **Cut the Rope Holiday Gift Edition**
+* **Cut the Rope Lite**
+* **Tiny Wings**
+* **Carcassonne**
+
+Information
+-----------
+Please see the **[LevelUnlocker wiki](https://github.com/rmsy/LevelUnlocker/wiki)** for more information about LevelUnlocker.
