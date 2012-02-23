@@ -1,64 +1,18 @@
+#!/bin/bash
 #LevelUnlocker by Isaac Moore
-#Follow @iamramsey on Twitter
-#-------------
-#Thanks to:
-#MadHouse (for practically teaching me bash)
-#rastignac (whose scripts serve as a great Bash 101 lesson)
-#dissident (without him, the scene might not even be where it is today)
-#WYSE (Testing)
-#Kaikz (making an awesome GUI)
-#TheSexyPenguin (Tiny Wings multiplier)
-#-------------
-#Changelog:
-#---
-#v0.1: Support for one Application:
-#-Cut the Rope
-#---
-#v0.1.2: Added support for:
-#-Cut the Rope Holiday Gift
-#---
-#v0.1.3: Added support for:
-#-Cut the Rope Lite
-#---
-#v0.2
-#Fixed bug
-#Added -s flag
-#-------------
-#v0.3
-#Better Support for Kaikz's Haxie
-#Outputs a supported app list to /var/mobile/supported_levelunlocker.txt
-#---
-#v0.3.1
-#Added support for Cut the Rope Valentines Update
-#-------------
-#v0.4: Added support for:
-#-Tiny Wings
-#Introduced "High Score Editing" Feature
-#-------------
-#v0.4.5: Added support for:
-#-Carcassonne
-#Removed support for:
-#-Cut the Rope
-#New apps are added with every update.
-#Feel free to help out with the effort, at:
-#http://hackulo.us/
-#-------------
-#This script is VERY similar to dlc.sh.
-#That's because the idea behind both is almost the same,
-#as is the method used to carry them out.
 
-function help
-{
-echo "Help: "
-echo "----- "
-echo "Run the script normally, to unlock levels. Run the script with -s, to list supported apps. "
+help() {
+echo "LevelUnlocker: "
+echo "[-h] Display this help "
+echo "[-cui] Run in command-line mode "
+echo "[-s] Display supported apps "
+echo "Only one argument may be taken at a time "
+echo "Run with no arguments to run in GUI mode "
 
-#Exit
 exit 1
 }
 
-function supported
-{
+supported() {
 echo "Supported Apps: "
 
 #Cut the Rope
@@ -98,41 +52,107 @@ rm -rf /tmp/App_list.tmp
 exit 1
 }
 
-#All the glitz:
 clear
 echo "LevelUnlocker by Isaac Moore "
-echo "Follow @iamramsey on Twitter "
-echo "Loading... "
 
-#We need plutil. Checking for it (and prompting for install)...
+#We need sbutils for pretty prompts :) Checking for it (and prompting for install)...
+if [ ! -e /usr/bin/sbalert ]; then
+    echo "sbutils is not installed. "
+    read -p "Would you like to install it now? [Y/N] " response
+    response=$(tr y Y <<< "$response")
+    if [ "$response" = "Y" ]; then
+        if [ -e /usr/bin/wget ]; then
+            wget https://github.com/downloads/innoying/iOS-sbutils/com.innoying.sbutils_1.0.2-4_iphoneos-arm.deb --no-check-certificate
+            dpkg -i com.innoying.sbutils_1.0.2-4_iphoneos-arm.deb
+            rm com.innoying.sbutils_1.0.2-4_iphoneos-arm.deb
+            clear
+            echo "sbutils has been successfully installed. "
+            echo "Please re-run the script. "
+            exit 0
+        else
+            echo "Please install wget from Cydia and run again. "
+            exit 0
+        fi
+    else
+        echo "Please install sbutils. "
+        exit 0
+    fi
+fi
+#End sbutils check
+
+#We need Erica Utilities. Checking for it (and prompting for install)...
 if [ ! -e /usr/bin/plutil ]; then
+    if [ "$1" = "-cui" ]; then
+        sbalert -t "Erica Utilities" -m "Erica Utils is not installed. Install it now?" -d "Yes" -a "No"
+        response=$(echo $?)
+        if [ "$response" = "0" ]; then
+            if [ -e /usr/bin/apt-get ]; then
+                apt-get install com.ericasadun.utilities -y -m
+                sbalert -t "Success!" -m "Erica Utilities has been successfully installed! Hyaah!"
+                exit 0
+            else
+                sbopenurl cydia://com.ericasadun.utilities
+                exit 0
+            fi
+        else
+            sbalert -m "Please install Erica Utilities from Cydia."
+            exit 0
+        fi
+    else
         echo "Erica Utilities is not installed. "
         read -p "Would you like to install it now? [Y/N] " response
-        if [ "$response" -eq "Y" ]; then
-                clear
-                echo "Installing..."
+        response=$(tr y Y <<< "$response")
+        if [ "$response" = "Y" ]; then
+            if [ -e /usr/bin/apt-get ]; then
                 apt-get install com.ericasadun.utilities
+            else
+                sbopenurl cydia://package/com.ericasadun.utilities
+                echo "Cydia has been opened to Erica Utilities on the device. "
+                exit 0
         else
                 echo "Please install Erica Utilities from Cydia. "      
-                exit 1
+                exit 0
         fi
 fi
+#End Erica Utilities check
 
 #Checking for wget
 if [ ! -e /usr/bin/wget ]; then
+    if [ "$1" = "-cui" ]; then
         echo "wget is not installed. "
         read -p "Would you like to install it now? [Y/N] " response
+        response=$(tr y Y <<< "$response")
         if [ "$response" -eq "Y" ]; then
-                clear
-                echo "Installing..."
+            if [ -e /usr/bin/apt-get ]; then
                 apt-get install wget
+                exit 0
+            else
+                sbopenurl cydia://package/wget
+                echo "Cydia has been opened to wget on your device. "
+                exit 0
+            fi
         else
-                echo "Please install wget from Cydia. "      
-                exit 1
+            echo "Please install wget from Cydia. "      
+            exit 0
         fi
+    else
+        sbalert -t "wget" -m "wget is not installed. Install it now?" -d "Yes" -a "No"
+        response=$(echo $?)
+        if [ "$response" = "0" ]; then
+            if [ -e /usr/bin/apt-get ]; then
+                apt-get install wget -y -m
+                sbalert -t "Success!" -m "wget has been successfully installed! Hyaah!"
+                exit 0
+            else
+                sbopenurl cydia://package/wget
+                exit 0
+            fi
+        else
+            sbalert -m "Please install wget from Cydia."
+                
 fi
 
-#Loading supported apps list file...
+#==DEPRECATED==
 #if [ -e "/var/mobile/supported_levelunlocker.txt" ]; then
 #        rm -rf /var/mobile/supported_levelunlocker.txt
 #fi
@@ -140,8 +160,9 @@ fi
 #echo "Cut the Rope Holiday Gift - Chillingo " >> /var/mobile/supported_levelunlocker.txt
 #echo "Cut the Rope Lite - Chillingo " >> /var/mobile/supported_levelulocker.txt
 #echo "Tiny Wings - Andreas Illiger " >> /var/mobile/supported_levelulocker.txt
+#==DEPRECATED==
 
-#Checking for outdated apps list (and removing)...
+#Checking for outdated and/or deprecated apps list (and removing)...
 if [ -e /tmp/applist ]; then
         rm -rf /tmp/applist
 fi
