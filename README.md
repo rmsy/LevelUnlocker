@@ -5,6 +5,7 @@ LevelUnlocker is a bash script for jailbroken iOS devices that unlocks levels in
 
 Supported Applications
 -----------
+* **Cut the Rope**
 * **Cut the Rope Holiday Gift Edition**
 * **Cut the Rope Lite**
 * **Tiny Wings**
