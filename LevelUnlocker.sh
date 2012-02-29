@@ -1,7 +1,7 @@
 #!/bin/bash
 #LevelUnlocker by Isaac Moore
 #v2
-#2/23/12
+#2/28/12
 
 help() {
 echo "LevelUnlocker: "
@@ -331,11 +331,11 @@ if [ ! -z "$appdir" ]; then
 	    cd "$appdir"
 	    cd ../Documents
 	    highscore=$(plutil -key "highScoreEntry1" "gameState.plist")
-	    score=$(sbalert -t "Tiny Wings" -m "This game supports high score editing. Enter a score higher than ${highscore}" -d "Modify" -a "Cancel" -p)
+	    score=$(sbalert -t "Tiny Wings" -m "Enter a score higher than: ${highscore}" -d "Modify" -a "Cancel" -p)
 	    response=$(echo $?)
 	    if [ "$response" = "0" ]; then
 	        plutil -key "highScoreEntry0" -value "$score" "gameState.plist" 2>&1> /dev/null
-	        name=$(sbalert -t "Tiny Wings" -m "Enter a name to be associated with this score" -p)
+	        name=$(sbalert -t "Tiny Wings" -m "Enter a name to be associated with this score:" -p)
 	        plutil -key "highScoreNameEntry0" -value "$name" "gameState.plist" 2>&1> /dev/null
 	        sbalert -t "Success!" -m "Tiny Wings' highscore was successfully changed! Huzzah!"
 	    fi
