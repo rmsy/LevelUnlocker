@@ -1,7 +1,7 @@
 #!/bin/bash
 #LevelUnlocker by Isaac Moore
 #v2
-#2/28/12
+#3/5/12
 
 help() {
 echo "LevelUnlocker: "
@@ -346,7 +346,7 @@ fi
 #By Isaac Moore
 
 appdir=$(grep -i "Carcassonne.app" /tmp/App_list.tmp)
-if [ ! -z "appdir" ]; then
+if [ ! -z "$appdir" ]; then
     networkStatus=$(sbnetwork foobar.com)
     if [ "$networkStatus" = "FAILED" ]; then
         if [ "$cui" = "-cui" ]; then
